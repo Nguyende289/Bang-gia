@@ -1,40 +1,57 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bảng Giá Sản Phẩm</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Giá Dịch Vụ</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Bảng Giá Sản Phẩm</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>Sản Phẩm</th>
-          <th>Giá</th>
-          <th>Mô Tả</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Sản phẩm 1</td>
-          <td>100.000 VNĐ</td>
-          <td>Mô tả sản phẩm 1</td>
-        </tr>
-        <tr>
-          <td>Sản phẩm 2</td>
-          <td>200.000 VNĐ</td>
-          <td>Mô tả sản phẩm 2</td>
-        </tr>
-        <tr>
-          <td>Sản phẩm 3</td>
-          <td>300.000 VNĐ</td>
-          <td>Mô tả sản phẩm 3</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <header>
+        <h1>Bảng Giá Dịch Vụ</h1>
+    </header>
+    <section class="pricing-table">
+        <div class="pricing-option">
+            <h2>Gói Cơ Bản</h2>
+            <p class="price" id="basic-price">500.000 VND</p>
+            <input type="number" class="price-input" id="basic-input" placeholder="Nhập giá mới" style="display:none;">
+            <button class="edit-btn" onclick="editPrice('basic')">Chỉnh sửa</button>
+            <button class="save-btn" id="basic-save-btn" onclick="savePrice('basic')" style="display:none;">Lưu</button>
+            <ul>
+                <li>Dịch vụ 1</li>
+                <li>Dịch vụ 2</li>
+                <li>Dịch vụ 3</li>
+            </ul>
+        </div>
+        <div class="pricing-option">
+            <h2>Gói Cao Cấp</h2>
+            <p class="price" id="premium-price">1.000.000 VND</p>
+            <input type="number" class="price-input" id="premium-input" placeholder="Nhập giá mới" style="display:none;">
+            <button class="edit-btn" onclick="editPrice('premium')">Chỉnh sửa</button>
+            <button class="save-btn" id="premium-save-btn" onclick="savePrice('premium')" style="display:none;">Lưu</button>
+            <ul>
+                <li>Dịch vụ 1</li>
+                <li>Dịch vụ 2</li>
+                <li>Dịch vụ 3</li>
+                <li>Dịch vụ 4</li>
+            </ul>
+        </div>
+        <div class="pricing-option">
+            <h2>Gói Doanh Nghiệp</h2>
+            <p class="price" id="business-price">2.000.000 VND</p>
+            <input type="number" class="price-input" id="business-input" placeholder="Nhập giá mới" style="display:none;">
+            <button class="edit-btn" onclick="editPrice('business')">Chỉnh sửa</button>
+            <button class="save-btn" id="business-save-btn" onclick="savePrice('business')" style="display:none;">Lưu</button>
+            <ul>
+                <li>Dịch vụ 1</li>
+                <li>Dịch vụ 2</li>
+                <li>Dịch vụ 3</li>
+                <li>Dịch vụ 4</li>
+                <li>Dịch vụ 5</li>
+            </ul>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
 </body>
 </html>
