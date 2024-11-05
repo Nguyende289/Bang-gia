@@ -1,38 +1,69 @@
-function editPrice(plan) {
-    // Ẩn giá cũ và hiển thị input và nút lưu
-    const priceElement = document.getElementById(`${plan}-price`);
-    const inputElement = document.getElementById(`${plan}-input`);
-    const editButton = document.querySelector(`#${plan}-edit-btn`);
-    const saveButton = document.getElementById(`${plan}-save-btn`);
+// API Key và URL từ AppSheet
+const API_KEY = 'YOUR_API_KEY';  // Thay YOUR_API_KEY bằng API Key của bạn
+const APP_ID = 'YOUR_APP_ID';    // Thay YOUR_APP_ID bằng App ID của bạn
+const TABLE_NAME = 'PriceTable'; // Tên bảng của bạn trong AppSheet
 
-    // Hiển thị input và nút lưu, ẩn giá cũ và nút chỉnh sửa
-    priceElement.style.display = "none";
-    inputElement.style.display = "block";
-    saveButton.style.display = "inline-block";
-    editButton.style.display = "none";
+// URL endpoint của AppSheet API
+const apiUrl = `https://api.appsheet.com/api/v2/apps/${APP_ID}/tables/${TABLE_NAME}/data`;
 
-    // Đưa giá cũ vào trường nhập liệu
-    inputElement.value = priceElement.textContent.replace(" VND", "");
-    inputElement.focus(); // Tự động focus vào input
-}
+// Hàm để lấy dữ liệu từ AppSheet API
+async function fetchData() {
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'ApplicationAccessKey': API_KEY, // Dùng API Key để xác thực
+                'Content-Type': 'application/json'
+            }
+        });
 
-function savePrice(plan) {
-    const inputElement = document.getElementById(`${plan}-input`);
-    const priceElement = document.getElementById(`${plan}-price`);
-    const editButton = document.querySelector(`#${plan}-edit-btn`);
-    const saveButton = document.getElementById(`${plan}-save-btn`);
-
-    // Lấy giá mới từ input
-    const newPrice = inputElement.value;
-    
-    // Kiểm tra giá trị hợp lệ
-    if (newPrice && !isNaN(newPrice)) {
-        priceElement.textContent = `${newPrice} VND`; // Cập nhật giá mới
+        const data = await response.json();
+        
+        // Gọi hàm để hiển thị dữ liệu
+        displayPricingData(data);
+    } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu từ AppSheet:", error);
     }
-    
-    // Ẩn input và nút lưu, hiển thị lại giá cũ và nút chỉnh sửa
-    inputElement.style.display = "none";
-    saveButton.style.display = "none";
-    priceElement.style.display = "block";
-    editButton.style.display = "inline-block";
 }
+
+// Hàm hiển thị bảng giá từ dữ liệu API
+function displayPricingData(data) {
+    const pricingTable = document.getElementById("pricing-table");
+    pricingTable.innerHTML = ""; // Xóa nội dung cũ trước khi cập nhật
+
+    // Duyệt qua dữ liệu và tạo bảng giá
+    data.rows.forEach(item => {
+        const pricingOption = document.createElement("div");
+        pricingOption.classList.add("pricing-option");
+
+        // Tạo phần hiển thị tên sản phẩm
+        const title = document.createElement("h2");
+        title.textContent = item["Tên Sản Phẩm"]; // Cột tên sản phẩm trong AppSheet
+        pricingOption.appendChild(title);
+
+        // Tạo phần hiển thị giá mua vào
+        const buyPrice = document.createElement("p");
+        buyPrice.textContent = `Giá Mua Vào: ${item["Giá Mua Vào"]} VND`; // Cột giá mua vào
+        pricingOption.appendChild(buyPrice);
+
+        // Tạo phần hiển thị giá bán ra
+        const sellPrice = document.createElement("p");
+        sellPrice.textContent = `Giá Bán Ra: ${item["Giá Bán Ra"]} VND`; // Cột giá bán ra
+        pricingOption.appendChild(sellPrice);
+
+        // Thêm phần bảng giá vào trang
+        pricingTable.appendChild(pricingOption);
+    });
+}
+
+// Hàm cập nhật dữ liệu sau một khoảng thời gian nhất định
+function startPolling() {
+    // Lấy dữ liệu ngay lập tức khi trang được tải
+    fetchData();
+
+    // Lập lại việc lấy dữ liệu sau mỗi 30 giây (30000 ms)
+    setInterval(fetchData, 30000); // Cập nhật mỗi 30 giây
+}
+
+// Gọi hàm để bắt đầu polling khi trang được tải
+startPolling();
