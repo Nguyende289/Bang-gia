@@ -16,7 +16,7 @@ const parseCSV = (text) => {
 };
 
 // ID của Google Sheet được chỉ định sẵn
-const GOOGLE_SHEET_ID = '1IBNYEMAIHjzUPSEcG1NIvn80t_vJO0_pFYiTcWquRH4';
+const GOOGLE_SHEET_ID = '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms';
 
 const Clock = () => {
     const [time, setTime] = React.useState(new Date());
@@ -105,8 +105,10 @@ const App = () => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
 
-  const fetchData = React.useCallback(async () => {
-    setLoading(true);
+  const fetchData = React.useCallback(async (isManual = false) => {
+    if (isManual) {
+        setLoading(true);
+    }
     setError(null);
     
     try {
@@ -130,21 +132,31 @@ const App = () => {
       console.error(err);
       setError(err instanceof Error ? err.message : 'Đã có lỗi xảy ra. Hãy chắc chắn rằng bảng tính của bạn được chia sẻ công khai.');
     } finally {
-      setLoading(false);
+      if (isManual || sheetData.length === 0) {
+        setLoading(false);
+      }
     }
-  }, []);
+  }, [sheetData.length]);
 
   React.useEffect(() => {
-    fetchData();
+    fetchData(true);
+  }, []); 
+  
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+        fetchData(false);
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, [fetchData]);
 
-  const tableComponent = React.createElement('div', { className: "w-full lg:w-1/2" },
+  const tableComponent = React.createElement('div', { className: "w-full lg:w-[60%]" },
     React.createElement('div', { className: "bg-red-800/50 backdrop-blur-sm border border-red-500 rounded-xl shadow-2xl p-4 md:p-6 overflow-x-auto" },
       React.createElement('table', { className: "w-full min-w-max text-left border-collapse" },
         React.createElement('thead', null,
           React.createElement('tr', { className: "border-b border-red-500" },
             sheetData[0] && sheetData[0].map((headerCell, index) => (
-              React.createElement('th', { key: index, className: "p-4 sm:p-5 font-semibold text-yellow-300 bg-red-700/60 uppercase text-lg whitespace-nowrap" },
+              React.createElement('th', { key: index, className: `p-5 sm:p-6 font-semibold text-yellow-300 bg-red-700/60 uppercase text-2xl whitespace-nowrap ${index === 0 ? 'text-center' : ''}` },
                 headerCell
               )
             ))
@@ -154,7 +166,7 @@ const App = () => {
           sheetData.slice(1).map((row, rowIndex) => (
             React.createElement('tr', { key: rowIndex, className: "border-b border-red-500 last:border-b-0 hover:bg-red-700/40 transition-colors duration-200" },
               row.map((cell, cellIndex) => (
-                React.createElement('td', { key: cellIndex, className: "p-4 sm:p-5 text-red-100 font-serif text-xl" },
+                React.createElement('td', { key: cellIndex, className: `p-5 sm:p-6 text-red-100 font-serif text-3xl ${cellIndex === 0 ? 'whitespace-normal break-words' : ''}` },
                   cell
                 )
               ))
@@ -165,7 +177,7 @@ const App = () => {
     )
   );
 
-  const chartComponent = React.createElement('div', { className: "w-full lg:w-1/2" },
+  const chartComponent = React.createElement('div', { className: "w-full lg:w-[40%]" },
     React.createElement('h2', { className: "text-2xl font-bold text-yellow-300 uppercase mb-4 text-center lg:text-left" }, "Biểu đồ XAU/USD (TradingView)"),
     React.createElement('div', { className: "bg-red-800/50 backdrop-blur-sm border border-red-500 rounded-xl shadow-2xl overflow-hidden", style: { height: '450px' } },
         React.createElement(TradingViewWidget)
@@ -173,7 +185,7 @@ const App = () => {
   );
   
   const refreshButton = React.createElement('button', {
-        onClick: fetchData,
+        onClick: () => fetchData(true),
         className: "ml-4 p-2 bg-yellow-400 text-red-700 rounded-full hover:bg-yellow-500 transition-transform duration-200 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed",
         'aria-label': "Cập nhật dữ liệu",
         disabled: loading,
