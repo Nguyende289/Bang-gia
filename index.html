@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bảng Giá Vàng</title>
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hiển thị Bảng Google Sheet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.0/client",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+  <link rel="stylesheet" href="/index.css">
 </head>
-<body>
-    <header>
-        <h1>Bảng Giá Vàng</h1>
-    </header>
-    <section class="pricing-table" id="pricing-table">
-        <!-- Dữ liệu từ AppSheet sẽ được hiển thị ở đây -->
-    </section>
-
-    <script src="script.js"></script>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="module" src="script.js"></script>
+  <script type="module" src="/index.tsx"></script>
 </body>
 </html>
